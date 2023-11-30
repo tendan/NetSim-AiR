@@ -3,7 +3,11 @@ project(NetSim)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_compile_options(-Wall -Wextra -Werror -Wpedantic -pedantic-errors)
+add_compile_options(-Wall -Werror -Wpedantic -pedantic-errors)
+
+IF (!WIN_32)
+    add_compile_options(-Wextra)
+ENDIF ()
 
 set(SOURCE_DIR ./src)
 set(SOURCE_FILES
