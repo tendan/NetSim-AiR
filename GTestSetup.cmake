@@ -12,6 +12,7 @@ enable_testing()
 set(TEST_DIR ./tests)
 set(SOURCE_TESTS_FILES
         ${TEST_DIR}/NetSimBasic_Tests.cpp
+        ${TEST_DIR}/test_storage_types.cpp
 )
 
 add_executable(
