@@ -6,21 +6,26 @@
 #define NETSIM_PACKAGE_HPP
 
 #include "types.hpp"
+#include <set>
 
 class Package {
 public:
     Package();
-    Package(ElementID elementId) : id_(elementId) {};
-    Package(Package&& moved) = default;
-    ~Package() = default;
 
-    Package& operator=(Package&& moved) = default;
-    ElementID get_id() const {
-        return id_;
-    };
+    Package(ElementID ID) : ID_(ID) {assigned_IDs.insert(ID_);}
+
+    Package(Package &&package) : ID_(package.ID_) {}
+
+    Package &operator=(Package &&package);
+
+    ElementID get_id() const {return ID_;}
+
+    ~Package();
 
 private:
-    ElementID id_;
+    ElementID ID_;
+    static std::set<ElementID> assigned_IDs;
+    static std::set<ElementID> freed_IDs;
 };
 
 #endif //NETSIM_PACKAGE_HPP
