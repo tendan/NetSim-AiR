@@ -16,7 +16,7 @@ public:
 
     Package(Package &&package) : ID_(package.ID_) {}
 
-    Package &operator=(Package &&package);
+    Package &operator=(Package &&package) noexcept;
 
     ElementID get_id() const {return ID_;}
 
