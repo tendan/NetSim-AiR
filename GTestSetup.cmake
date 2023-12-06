@@ -9,8 +9,9 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-set(TEST_DIR tests)
+set(TEST_DIR ./tests)
 set(SOURCE_TESTS_FILES
+        ${TEST_DIR}/NetSimBasic_Tests.cpp
 )
 
 add_executable(
