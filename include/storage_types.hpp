@@ -21,13 +21,17 @@ public:
     virtual ~IPackageStockpile() = default;
 
     virtual void push(Package&& moved) = 0;
+
     virtual bool empty() const = 0;
 
     virtual size_t size() const = 0;
 
     virtual const_iterator begin() const = 0;
+
     virtual const_iterator end() const = 0;
+
     virtual const_iterator cbegin() const = 0;
+
     virtual const_iterator cend() const = 0;
 };
 
@@ -36,12 +40,14 @@ public:
     ~IPackageQueue() override = default;
 
     virtual Package pop() = 0;
+
     virtual PackageQueueType get_queue_type() const = 0;
 };
 
 class PackageQueue : public IPackageQueue {
 public:
     PackageQueue() = delete;
+
     explicit PackageQueue(PackageQueueType type) : package_queue_type_(type), package_list_() {}
 
     ~PackageQueue() override = default;
@@ -84,7 +90,6 @@ private:
     PackageQueueType package_queue_type_;
     std::list<Package> package_list_;
 };
-
 
 
 #endif //NETSIM_STORAGE_TYPES_HPP
