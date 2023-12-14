@@ -6,5 +6,7 @@
 #define NETSIM_TYPES_HPP
 
 using ElementID = unsigned;
+using TimeOffset = unsigned;
+using Time = unsigned;
 
 #endif //NETSIM_TYPES_HPP
