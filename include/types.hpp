@@ -7,4 +7,10 @@
 
 using ElementID = unsigned;
 
+using Time = unsigned;
+
+using TimeOffset = Time;
+
+using ProbabilityGenerator = unsigned;
+
 #endif //NETSIM_TYPES_HPP
