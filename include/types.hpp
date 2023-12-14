@@ -9,7 +9,7 @@ using ElementID = unsigned;
 
 using Time = unsigned;
 
-using TimeOffet = unsigned;
+using TimeOffset = unsigned;
 
 using ProbabilityGenerator = std::function<double()>;
 
