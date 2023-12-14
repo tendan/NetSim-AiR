@@ -7,4 +7,10 @@
 
 using ElementID = unsigned;
 
+using Time = unsigned;
+
+using TimeOffet = unsigned;
+
+using ProbabilityGenerator = std::function<double()>;
+
 #endif //NETSIM_TYPES_HPP
