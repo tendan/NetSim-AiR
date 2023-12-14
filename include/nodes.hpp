@@ -7,6 +7,7 @@
 
 #include "types.hpp"
 #include "package.hpp"
+#include "helpers.hpp"
 #include <optional>
 #include <map>
 #include <utility>
@@ -21,6 +22,7 @@ private:
     preferences_t preferences_;
     ProbabilityGenerator pg_;
 public:
+    ReceiverPreferences() : ReceiverPreferences(probability_generator) {}
     ReceiverPreferences(ProbabilityGenerator pg) : pg_(std::move(pg)) {};
 
     void add_receiver(IPackageReceiver* r);
