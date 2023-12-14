@@ -57,16 +57,16 @@ void Worker::receive_package(Package &&p) {
 }
 
 void Worker::do_work(Time t) {
-    if (!bufor_ && !q_->empty()) {
-        bufor_.emplace(q_->pop());
+    if (!buffer_ && !q_->empty()) {
+        buffer_.emplace(q_->pop());
         t_ = t;
     }
     else {
         if (t - t_ + 1 == pd_) {
-            push_package(Package(bufor_.value().get_id()));
-            bufor_.reset();
+            push_package(Package(buffer_.value().get_id()));
+            buffer_.reset();
             if (!q_->empty()) {
-                bufor_.emplace(q_->pop());
+                buffer_.emplace(q_->pop());
             }
         }
     }
