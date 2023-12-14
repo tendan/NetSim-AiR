@@ -15,41 +15,47 @@
 class IPackageReceiver {};
 
 class ReceiverPreferences {
-private:
+public:
     using preferences_t = std::map<IPackageReceiver*, double>;
     using const_iterator = preferences_t::const_iterator;
 
-    preferences_t preferences_;
-    ProbabilityGenerator pg_;
-public:
     ReceiverPreferences() : ReceiverPreferences(probability_generator) {}
-    ReceiverPreferences(ProbabilityGenerator pg) : pg_(std::move(pg)) {};
+    ReceiverPreferences(ProbabilityGenerator pg) : generate_probability_(std::move(pg)) {};
 
-    void add_receiver(IPackageReceiver* r);
+    void add_receiver(IPackageReceiver* receiver);
 
-    void remove_receiver(IPackageReceiver* r);
+    void remove_receiver(IPackageReceiver* receiver);
 
     IPackageReceiver* choose_receiver();
 
-    preferences_t& get_preferences();
+    const preferences_t& get_preferences() const {
+        return this->preferences_;
+    };
 
     const_iterator cbegin() const noexcept { return preferences_.cbegin(); };
     const_iterator cend() const noexcept { return preferences_.cend(); };
     const_iterator begin() const noexcept { return preferences_.begin(); };
     const_iterator end() const noexcept { return preferences_.end(); };
+
+private:
+    preferences_t preferences_;
+    ProbabilityGenerator generate_probability_;
 };
 
 class PackageSender {
 public:
+    PackageSender() = default;
     PackageSender(PackageSender&& movable) = default;
 
-    void send_package(void);
+    void send_package();
 
-    std::optional<Package>& get_sending_buffer(void);
+    const std::optional<Package>& get_sending_buffer() const { return buffer_; };
 
     ReceiverPreferences receiver_preferences_;
 protected:
-    void push_package(Package&& movable);
+    void push_package(Package&& moved_package) { buffer_.emplace(moved_package.get_id())};
+
+    std::optional<Package> buffer_;
 };
 
 #endif //NETSIM_NODES_HPP
