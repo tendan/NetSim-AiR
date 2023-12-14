@@ -26,6 +26,10 @@ void ReceiverPreferences::remove_receiver(IPackageReceiver* r) {
     });
 }
 
+void Storehouse::receive_package(Package &&p) {
+    d_->push(std::move(p));
+}
+
 IPackageReceiver* ReceiverPreferences::choose_receiver() {
     double probability = generate_probability_();
     if (probability < 0 || probability > 1) return nullptr;
@@ -44,5 +48,26 @@ void PackageSender::send_package() {
         IPackageReceiver* receiver = receiver_preferences_.choose_receiver();
         //receiver->receive_package(std::move(*buffer_)); // TODO
         //buffer_.reset();
+    }
+}
+
+
+void Worker::receive_package(Package &&p) {
+    q_->push(std::move(p));
+}
+
+void Worker::do_work(Time t) {
+    if (!bufor_ && !q_->empty()) {
+        bufor_.emplace(q_->pop());
+        t_ = t;
+    }
+    else {
+        if (t - t_ + 1 == pd_) {
+            push_package(Package(bufor_.value().get_id()));
+            bufor_.reset();
+            if (!q_->empty()) {
+                bufor_.emplace(q_->pop());
+            }
+        }
     }
 }
