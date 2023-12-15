@@ -13,10 +13,15 @@
 class IPackageReceiver {
 public:
     virtual void receive_package(Package&& p) = 0;
+
     virtual ElementID get_id() const = 0;
+
     virtual IPackageStockpile::const_iterator cbegin() const = 0;
+
     virtual IPackageStockpile::const_iterator cend() const = 0;
+
     virtual IPackageStockpile::const_iterator begin() const = 0;
+
     virtual IPackageStockpile::const_iterator end() const = 0;
 
 #if defined(EXERCISE_ID) && EXERCISE_ID != EXERCISE_ID_NODES
@@ -26,32 +31,12 @@ public:
     virtual ~IPackageReceiver() = default;
 };
 
-class Ramp : public PackageSender {
-public:
-    Ramp(ElementID id, TimeOffset di)
-            : PackageSender(), id_(id), di_(di), t_(), bufor_(std::nullopt) {}
-
-    void deliver_goods(Time t);
-
-    TimeOffset get_delivery_interval() const { return di_; }
-
-    ElementID get_id() const { return id_; }
-
-private:
-    ElementID id_;
-    TimeOffset di_;
-    Time t_;
-    std::optional<Package> bufor_;
-};
-
 class ReceiverPreferences {
 public:
     using preferences_t = std::map<IPackageReceiver*, double>;
     using const_iterator = preferences_t::const_iterator;
 
-    ReceiverPreferences() : ReceiverPreferences(probability_generator) {}
-
-    ReceiverPreferences(ProbabilityGenerator pg) : generate_probability_(std::move(pg)) {};
+    explicit ReceiverPreferences(ProbabilityGenerator pg = probability_generator) : generate_probability_(std::move(pg)) {};
 
     void add_receiver(IPackageReceiver* receiver);
 
@@ -73,6 +58,7 @@ public:
 
 private:
     preferences_t preferences_;
+
     ProbabilityGenerator generate_probability_;
 };
 
@@ -88,9 +74,30 @@ public:
 
     ReceiverPreferences receiver_preferences_;
 protected:
-    void push_package(Package&& moved_package) { buffer_.emplace(moved_package.get_id()) };
+    void push_package(Package&& moved_package) { buffer_.emplace(moved_package.get_id()); };
 
     std::optional<Package> buffer_ = std::nullopt;
+};
+
+class Ramp : public PackageSender {
+public:
+    Ramp(ElementID id, TimeOffset di)
+            : PackageSender(), id_(id), di_(di), t_(), buffer_(std::nullopt) {}
+
+    void deliver_goods(Time t);
+
+    TimeOffset get_delivery_interval() const { return di_; }
+
+    ElementID get_id() const { return id_; }
+
+private:
+    ElementID id_;
+
+    TimeOffset di_;
+
+    Time t_;
+
+    std::optional<Package> buffer_;
 };
 
 
@@ -115,6 +122,7 @@ public:
 
 private:
     ElementID id_;
+
     std::unique_ptr<IPackageStockpile> d_;
 };
 

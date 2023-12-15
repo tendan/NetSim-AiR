@@ -14,12 +14,4 @@ double default_probability_generator() {
     return std::generate_canonical<double, 10>(rng);
 }
 
-double probability_generator_1() {
-    return std::generate_canonical<double, 10>(rng);
-}
-
-double probability_generator_2() {
-    return (double) (rand() % RAND_MAX) / RAND_MAX;  // NIEZALECANE: mała losowość generowanego ciągu liczb...
-}
-
 std::function<double()> probability_generator = default_probability_generator;
