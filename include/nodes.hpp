@@ -63,7 +63,7 @@ public:
 protected:
     void push_package(Package&& moved_package) { buffer_.emplace(moved_package.get_id()) };
 
-    std::optional<Package> buffer_;
+    std::optional<Package> buffer_ = std::nullopt;
 };
 
 

@@ -44,11 +44,10 @@ IPackageReceiver* ReceiverPreferences::choose_receiver() {
 }
 
 void PackageSender::send_package() {
-    if (buffer_.has_value()) {
-        IPackageReceiver* receiver = receiver_preferences_.choose_receiver();
-        //receiver->receive_package(std::move(*buffer_)); // TODO
-        //buffer_.reset();
-    }
+    if (buffer_.has_value()) { return; }
+    IPackageReceiver* receiver = receiver_preferences_.choose_receiver();
+    //receiver->receive_package(std::move(*buffer_)); // TODO
+    //buffer_.reset();
 }
 
 
