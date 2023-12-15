@@ -14,8 +14,11 @@ endif ()
 
 set(SOURCE_DIR ./src)
 set(SOURCE_FILES
-        src/package.cpp
-        src/storage_types.cpp)
+        ${SOURCE_DIR}/package.cpp
+        ${SOURCE_DIR}/storage_types.cpp
+        ${SOURCE_DIR}/helpers.cpp
+        ${SOURCE_DIR}/nodes.cpp
+)
 
 add_executable(${PROJECT_NAME} main.cpp ${SOURCE_FILES})
 
