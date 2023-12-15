@@ -59,8 +59,7 @@ void Worker::do_work(Time t) {
     if (!buffer_ && !q_->empty()) {
         buffer_.emplace(q_->pop());
         t_ = t;
-    }
-    else {
+    } else {
         if (t - t_ + 1 == pd_) {
             push_package(Package(buffer_.value().get_id()));
             buffer_.reset();
@@ -68,5 +67,15 @@ void Worker::do_work(Time t) {
                 buffer_.emplace(q_->pop());
             }
         }
+    }
+}
+
+void Ramp::deliver_goods(Time t) {
+    if (!bufor_) {
+        push_package(Package());
+        bufor_.emplace(id_);
+        t_ = t;
+    } else if (t - di_ == t_) {
+        push_package(Package());
     }
 }
