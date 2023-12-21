@@ -10,6 +10,11 @@
 #include <map>
 #include <utility>
 
+
+enum ReceiverType {WORKER, STOREHOUSE};
+
+enum NodeColor { UNVISITED, VISITED, VERIFIED };
+
 class IPackageReceiver {
 public:
     virtual void receive_package(Package&& p) = 0;
@@ -24,9 +29,7 @@ public:
 
     virtual IPackageStockpile::const_iterator end() const = 0;
 
-#if defined(EXERCISE_ID) && EXERCISE_ID != EXERCISE_ID_NODES
     virtual ReceiverType get_receiver_type() const = 0;
-#endif
 
     virtual ~IPackageReceiver() = default;
 };
@@ -104,13 +107,13 @@ private:
 class Storehouse : public IPackageReceiver {
 public:
     Storehouse(ElementID id,
-               std::unique_ptr<IPackageStockpile> d = std::make_unique<PackageQueue>(PackageQueueType::FIFO)) : id_(id),
-                                                                                                                d_(std::move(
-                                                                                                                        d)) {}
+               std::unique_ptr<IPackageStockpile> d = std::make_unique<PackageQueue>(PackageQueueType::FIFO)) : id_(id), d_(std::move(d)) {}
 
     void receive_package(Package&& p) override;
 
     ElementID get_id() const override { return id_; }
+
+    ReceiverType get_receiver_type() const override {return STOREHOUSE;};
 
     IPackageStockpile::const_iterator cbegin() const override { return d_->cbegin(); }
 
@@ -141,6 +144,8 @@ public:
     void receive_package(Package&& p) override;
 
     ElementID get_id() const override { return id_; }
+
+    ReceiverType get_receiver_type() const override {return WORKER;};
 
     IPackageStockpile::const_iterator cbegin() const override { return q_->cbegin(); }
 
