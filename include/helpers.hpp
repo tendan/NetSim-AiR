@@ -1,6 +1,3 @@
-//
-// Created by Oskar Słomion on 14/12/2023.
-//
 #ifndef HELPERS_HPP_
 #define HELPERS_HPP_
 
