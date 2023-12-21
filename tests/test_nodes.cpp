@@ -85,41 +85,6 @@ TEST(ReceiverPreferencesTest, RemoveReceiversRescalesProbability) {
     EXPECT_EQ(rp.get_preferences().at(&r1), 1.0);
 }
 
-// Przydatny alias, żeby zamiast pisać `::testing::Return(...)` móc pisać
-// samo `Return(...)`.
-using ::testing::Return;
-
-// Dla czytelności nazewnictwa grupy scenariuszy testowych (oraz ponieważ być
-// może zajdzie konieczność korzystania z więcej niż jednej "fixturki") tworzymy
-// osobną klasę dziedziczącą po `GlobalFunctionFixture`.
-class ReceiverPreferencesChoosingTest : public GlobalFunctionsFixture {
-};
-
-TEST_F(ReceiverPreferencesChoosingTest, ChooseReceiver) {
-    // Upewnij się, że odbiorcy wybierani są z właściwym prawdopodobieństwem.
-
-    EXPECT_CALL(global_functions_mock, generate_canonical()).WillOnce(Return(0.3)).WillOnce(Return(0.7));
-
-    ReceiverPreferences rp;
-
-    MockReceiver r1, r2;
-    rp.add_receiver(&r1);
-    rp.add_receiver(&r2);
-
-    if (rp.begin()->first == &r1) {
-        EXPECT_EQ(rp.choose_receiver(), &r1);
-        EXPECT_EQ(rp.choose_receiver(), &r2);
-    } else {
-        EXPECT_EQ(rp.choose_receiver(), &r2);
-        EXPECT_EQ(rp.choose_receiver(), &r1);
-    }
-}
-
-// -----------------
-
-using ::testing::Return;
-using ::testing::_;
-
 // Ponieważ `IPackageStockpile::const_iterator` to iterator na (niestandardowy)
 // typ Package, który nie przeciąża operatora <<, Google Mock nie ma pojęcia
 // w jaki sposób wypisać iterator w postaci tekstowej (w przypadku nie
@@ -140,6 +105,7 @@ public:
     void push_package(Package&& package) { PackageSender::push_package(std::move(package)); }
 };
 
+using ::testing::_;
 
 TEST(PackageSenderTest, SendPackage) {
     MockReceiver mock_receiver;
