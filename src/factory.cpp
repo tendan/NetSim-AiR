@@ -66,16 +66,16 @@ Factory load_factory_structure(std::istream& is) {
 
         switch(parsed.element_type) {
             case RAMP:
-                // TODO
+                std::cout << "Wczytano rampę" << std::endl;
                 break;
             case WORKER:
-                // TODO
+                std::cout << "Wczytano pracownika" << std::endl;
                 break;
             case STOREHOUSE:
-                // TODO
+                std::cout << "Wczytano magazyn" << std::endl;
                 break;
             case LINK:
-                // TODO
+                std::cout << "Wczytano połączenie" << std::endl;
                 break;
         }
     }
