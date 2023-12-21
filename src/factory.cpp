@@ -1,8 +1,5 @@
 #include "factory.hpp"
 #include "nodes.hpp"
-#include <istream>
-#include <string>
-#include <sstream>
 
 bool has_reachable_storehouse(PackageSender* sender, std::map<const PackageSender*, NodeColor>& node_colors) {
     if (node_colors[sender] == NodeColor::VERIFIED) {
@@ -78,12 +75,12 @@ void Factory::do_package_passing() {
         worker.send_package();
 }
 
-bool Factory::is_consistent() {
+bool Factory::is_consistent() const {
     std::map<const PackageSender*, NodeColor> kolor;
 
     auto set_unvisited_colors = [&kolor](const auto& container) {
         for (const auto& item : container) {
-            auto sender = dynamic_cast<PackageSender*>(&item);
+            const PackageSender* sender = dynamic_cast<const PackageSender*>(&item);
             kolor[sender] = NodeColor::UNVISITED;
         }
     };
@@ -93,7 +90,7 @@ bool Factory::is_consistent() {
 
     try {
         for (const auto& ramp : cont_r) {
-            auto sender = dynamic_cast<PackageSender*>(&ramp);
+            const PackageSender* sender = dynamic_cast<const PackageSender*>(&ramp);
             has_reachable_storehouse(sender, kolor);
         }
     } catch (const std::logic_error&) {
@@ -168,16 +165,17 @@ Factory load_factory_structure(std::istream& is) {
         ParsedLineData parsed = parse_line(line);
 
         switch(parsed.element_type) {
-            case RAMP:
+            case ElementType::RAMP: {
                 std::cout << "Wczytano rampę" << std::endl;
                 break;
-            case WORKER:
+            }
+            case ElementType::WORKER:
                 std::cout << "Wczytano pracownika" << std::endl;
                 break;
-            case STOREHOUSE:
+            case ElementType::STOREHOUSE:
                 std::cout << "Wczytano magazyn" << std::endl;
                 break;
-            case LINK:
+            case ElementType::LINK:
                 std::cout << "Wczytano połączenie" << std::endl;
                 break;
         }

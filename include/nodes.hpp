@@ -11,9 +11,13 @@
 #include <utility>
 
 
-enum ReceiverType {WORKER, STOREHOUSE};
+enum class ReceiverType {
+    WORKER, STOREHOUSE
+};
 
-enum NodeColor { UNVISITED, VISITED, VERIFIED };
+enum class NodeColor {
+    UNVISITED, VISITED, VERIFIED
+};
 
 class IPackageReceiver {
 public:
@@ -39,7 +43,8 @@ public:
     using preferences_t = std::map<IPackageReceiver*, double>;
     using const_iterator = preferences_t::const_iterator;
 
-    explicit ReceiverPreferences(ProbabilityGenerator pg = probability_generator) : generate_probability_(std::move(pg)) {};
+    explicit ReceiverPreferences(ProbabilityGenerator pg = probability_generator) : generate_probability_(
+            std::move(pg)) {};
 
     void add_receiver(IPackageReceiver* receiver);
 
@@ -107,13 +112,15 @@ private:
 class Storehouse : public IPackageReceiver {
 public:
     Storehouse(ElementID id,
-               std::unique_ptr<IPackageStockpile> d = std::make_unique<PackageQueue>(PackageQueueType::FIFO)) : id_(id), d_(std::move(d)) {}
+               std::unique_ptr<IPackageStockpile> d = std::make_unique<PackageQueue>(PackageQueueType::FIFO)) : id_(id),
+                                                                                                                d_(std::move(
+                                                                                                                        d)) {}
 
     void receive_package(Package&& p) override;
 
     ElementID get_id() const override { return id_; }
 
-    ReceiverType get_receiver_type() const override {return STOREHOUSE;};
+    ReceiverType get_receiver_type() const override { return ReceiverType::STOREHOUSE; };
 
     IPackageStockpile::const_iterator cbegin() const override { return d_->cbegin(); }
 
@@ -145,7 +152,7 @@ public:
 
     ElementID get_id() const override { return id_; }
 
-    ReceiverType get_receiver_type() const override {return WORKER;};
+    ReceiverType get_receiver_type() const override { return ReceiverType::WORKER; };
 
     IPackageStockpile::const_iterator cbegin() const override { return q_->cbegin(); }
 

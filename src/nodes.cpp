@@ -31,16 +31,6 @@ void Storehouse::receive_package(Package &&p) {
 }
 
 IPackageReceiver* ReceiverPreferences::choose_receiver() {
-    /*double probability = generate_probability_();
-    if (probability < 0 || probability > 1) return nullptr;
-
-    double distribution = 0.;
-    auto found = std::find_if(preferences_.begin(), preferences_.end(), [&](const ReceiverPair& receiver) {
-        distribution += receiver.second;
-        return (distribution >= 0 && distribution <= 1) && (probability <= distribution);
-    });
-
-    return found != std::end(preferences_) ? found->first : nullptr;*/
     auto prob = generate_probability_();
     if (prob >= 0 && prob <= 1) {
         double distribution = 0.0;
