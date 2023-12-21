@@ -1,6 +1,8 @@
 #ifndef NETSIM_NODES_HPP
 #define NETSIM_NODES_HPP
 
+#define WITH_RECEIVER_TYPE 1
+
 #include "types.hpp"
 #include "package.hpp"
 #include "helpers.hpp"
