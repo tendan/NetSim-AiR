@@ -150,6 +150,7 @@ public:
 
     IPackageStockpile::const_iterator end() const override { return q_->end(); }
 
+    IPackageQueue* get_queue() const; // TODO
 private:
     ElementID id_;
     TimeOffset pd_;
