@@ -16,6 +16,7 @@ set(SOURCE_TESTS_FILES
         ${TEST_DIR}/test_storage_types.cpp
         ${TEST_DIR}/test_nodes.cpp
         ${TEST_DIR}/test_factory.cpp
+        ${TEST_DIR}/test_factory_io.cpp
 )
 
 add_executable(
