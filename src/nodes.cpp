@@ -15,14 +15,16 @@ void ReceiverPreferences::add_receiver(IPackageReceiver* r) {
 }
 
 void ReceiverPreferences::remove_receiver(IPackageReceiver* r) {
+    auto receiver_to_remove = preferences_.find(r);
+    if (receiver_to_remove == preferences_.end()) return;
+
+    preferences_.erase(receiver_to_remove);
+
     auto num_of_receivers = preferences_.size();
-    if (num_of_receivers <= 1) return;
-    preferences_.erase(r);
+    if (num_of_receivers == 0) return;
+
     std::for_each(preferences_.begin(), preferences_.end(), [=](ReceiverPair& receiver) {
-        /*receiver.second = (receiver.first != r)
-                ? 1 / static_cast<double>(num_of_receivers + 1)
-                : receiver.second;*/
-        receiver.second = 1 / static_cast<double>(num_of_receivers - 1);
+        receiver.second = 1. / static_cast<double>(num_of_receivers);
     });
 }
 
