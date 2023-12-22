@@ -19,7 +19,7 @@ set(SOURCE_FILES
         ${SOURCE_DIR}/helpers.cpp
         ${SOURCE_DIR}/nodes.cpp
         ${SOURCE_DIR}/factory.cpp
-)
+        src/reports.cpp)
 
 add_executable(${PROJECT_NAME} main.cpp ${SOURCE_FILES})
 
