@@ -1,6 +1,8 @@
 #ifndef NETSIM_NODES_HPP
 #define NETSIM_NODES_HPP
 
+#define WITH_RECEIVER_TYPE 1
+
 #include "types.hpp"
 #include "package.hpp"
 #include "helpers.hpp"
@@ -9,6 +11,15 @@
 #include <memory>
 #include <map>
 #include <utility>
+
+
+enum class ReceiverType {
+    WORKER, STOREHOUSE
+};
+
+enum class NodeColor {
+    UNVISITED, VISITED, VERIFIED
+};
 
 class IPackageReceiver {
 public:
@@ -24,9 +35,7 @@ public:
 
     virtual IPackageStockpile::const_iterator end() const = 0;
 
-#if defined(EXERCISE_ID) && EXERCISE_ID != EXERCISE_ID_NODES
     virtual ReceiverType get_receiver_type() const = 0;
-#endif
 
     virtual ~IPackageReceiver() = default;
 };
@@ -36,7 +45,8 @@ public:
     using preferences_t = std::map<IPackageReceiver*, double>;
     using const_iterator = preferences_t::const_iterator;
 
-    explicit ReceiverPreferences(ProbabilityGenerator pg = probability_generator) : generate_probability_(std::move(pg)) {};
+    explicit ReceiverPreferences(ProbabilityGenerator pg = probability_generator) : generate_probability_(
+            std::move(pg)) {};
 
     void add_receiver(IPackageReceiver* receiver);
 
@@ -112,6 +122,8 @@ public:
 
     ElementID get_id() const override { return id_; }
 
+    ReceiverType get_receiver_type() const override { return ReceiverType::STOREHOUSE; };
+
     IPackageStockpile::const_iterator cbegin() const override { return d_->cbegin(); }
 
     IPackageStockpile::const_iterator cend() const override { return d_->cend(); }
@@ -142,6 +154,8 @@ public:
 
     ElementID get_id() const override { return id_; }
 
+    ReceiverType get_receiver_type() const override { return ReceiverType::WORKER; };
+
     IPackageStockpile::const_iterator cbegin() const override { return q_->cbegin(); }
 
     IPackageStockpile::const_iterator cend() const override { return q_->cend(); }
@@ -149,6 +163,8 @@ public:
     IPackageStockpile::const_iterator begin() const override { return q_->begin(); }
 
     IPackageStockpile::const_iterator end() const override { return q_->end(); }
+
+    IPackageQueue* get_queue() const { return q_.get(); }
 
 private:
     ElementID id_;

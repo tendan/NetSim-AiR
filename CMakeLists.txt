@@ -18,6 +18,7 @@ set(SOURCE_FILES
         ${SOURCE_DIR}/storage_types.cpp
         ${SOURCE_DIR}/helpers.cpp
         ${SOURCE_DIR}/nodes.cpp
+        ${SOURCE_DIR}/factory.cpp
 )
 
 add_executable(${PROJECT_NAME} main.cpp ${SOURCE_FILES})
