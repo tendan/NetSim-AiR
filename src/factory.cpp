@@ -184,18 +184,30 @@ void link(Factory& factory, const std::map<std::string, std::string>& parameters
     ElementID src_node_id = std::stoi(src_param[1]);
 
     auto dest_param = character_split(dest_str, '-');
-    //NodeType dest_node_t = str_node_type.at(dest_param[0]);
+    NodeType dest_node_t = str_node_type.at(dest_param[0]);
     ElementID dest_node_id = std::stoi(dest_param[1]);
 
-    Storehouse* storehouse = &*factory.find_storehouse_by_id(dest_node_id);
+    IPackageReceiver* package_receiver = nullptr;
+
+    switch(dest_node_t) {
+        case NodeType::RAMP:
+            break;
+        case NodeType::WORKER:
+            package_receiver = &*factory.find_worker_by_id(dest_node_id);
+            break;
+        case NodeType::STORE: {
+            package_receiver = &*factory.find_storehouse_by_id(dest_node_id);
+            break;
+        }
+    }
 
     switch(src_node_t) {
         case NodeType::RAMP: {
-            factory.find_ramp_by_id(src_node_id)->receiver_preferences_.add_receiver(storehouse);
+            factory.find_ramp_by_id(src_node_id)->receiver_preferences_.add_receiver(package_receiver);
             break;
         }
         case NodeType::WORKER: {
-            factory.find_worker_by_id(src_node_id)->receiver_preferences_.add_receiver(storehouse);
+            factory.find_worker_by_id(src_node_id)->receiver_preferences_.add_receiver(package_receiver);
             break;
         }
         case NodeType::STORE:
@@ -268,8 +280,22 @@ std::string queue_type_str(PackageQueueType package_queue_type) {
     return {};
 }
 
+void link_stream_fill(std::stringstream& link_stream, const PackageSender& package_sender, ElementID package_sender_id, std::string&& package_sender_name) {
+    auto prefs = package_sender.receiver_preferences_.get_preferences();
+
+    std::for_each(prefs.cbegin(), prefs.cend(), [&](const std::pair<IPackageReceiver*, double>& key_value) {
+        link_stream << "LINK src=" << package_sender_name << "-" << package_sender_id << " ";
+        const IPackageReceiver* package_receiver = key_value.first;
+        ReceiverType receiver_type = package_receiver->get_receiver_type();
+
+        std::string receiver_type_str = receiver_type == ReceiverType::WORKER ? "worker" : "store";
+
+        link_stream << "dest=" << receiver_type_str << "-" << package_receiver->get_id() << '\n';
+        std::cout << link_stream.str();
+    });
+}
+
 void save_factory_structure(Factory& factory, std::ostream& os) {
-    // TODO
     // Elementy w pliku występującą w następującej kolejności:
     // LOADING_RAMP, WORKER, STOREHOUSE, LINK.
 
@@ -280,19 +306,7 @@ void save_factory_structure(Factory& factory, std::ostream& os) {
         os << "LOADING_RAMP id=" << ramp_id << ' '
            << "delivery-interval=" << ramp.get_delivery_interval() << '\n';
 
-        auto prefs = ramp.receiver_preferences_.get_preferences();
-
-        std::for_each(prefs.cbegin(), prefs.cend(), [&](const std::pair<IPackageReceiver*, double>& key_value) {
-            link_stream << "LINK src=" << "ramp" << "-" << ramp_id << " ";
-            const IPackageReceiver* package_receiver = key_value.first;
-            ReceiverType receiver_type = package_receiver->get_receiver_type();
-
-            std::string receiver_type_str = receiver_type == ReceiverType::WORKER ? "worker" : "store";
-
-            link_stream << "dest=" << receiver_type_str << "-" << package_receiver->get_id() << '\n';
-            std::cout << link_stream.str();
-        });
-
+        link_stream_fill(link_stream, ramp, ramp_id, "ramp");
     });
 
     std::for_each(factory.worker_cbegin(), factory.worker_cend(), [&](const Worker& worker) {
@@ -302,18 +316,7 @@ void save_factory_structure(Factory& factory, std::ostream& os) {
            << "processing-time=" << worker.get_processing_duration() << ' '
            << "queue-type=" << queue_type_str(queue_type) << '\n';
 
-        auto prefs = worker.receiver_preferences_.get_preferences();
-
-        std::for_each(prefs.cbegin(), prefs.cend(), [&](const std::pair<IPackageReceiver*, double>& key_value) {
-            link_stream << "LINK src=" << "worker" << "-" << worker_id << " ";
-            const IPackageReceiver* package_receiver = key_value.first;
-            ReceiverType receiver_type = package_receiver->get_receiver_type();
-
-            std::string receiver_type_str = receiver_type == ReceiverType::WORKER ? "worker" : "store";
-
-            link_stream << "dest=" << receiver_type_str << "-" << package_receiver->get_id() << '\n';
-            std::cout << link_stream.str();
-        });
+        link_stream_fill(link_stream, worker, worker_id, "worker");
     });
 
     std::for_each(factory.storehouse_cbegin(), factory.storehouse_cend(), [&](const Storehouse& storehouse) {
