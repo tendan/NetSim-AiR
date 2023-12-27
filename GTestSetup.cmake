@@ -17,6 +17,9 @@ set(SOURCE_TESTS_FILES
         ${TEST_DIR}/test_nodes.cpp
         ${TEST_DIR}/test_factory.cpp
         ${TEST_DIR}/test_factory_io.cpp
+        ${TEST_DIR}/test_package.cpp
+        ${TEST_DIR}/test_reports.cpp
+        ${TEST_DIR}/test_simulate.cpp
 )
 
 add_executable(

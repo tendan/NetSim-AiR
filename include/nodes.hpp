@@ -132,7 +132,7 @@ public:
 
     IPackageStockpile::const_iterator end() const override { return d_->end(); }
 
-    IPackageStockpile* get_queue() const {return d_.get();}
+    IPackageStockpile* get_queue() const { return d_.get(); }
 
 private:
     ElementID id_;
@@ -158,7 +158,7 @@ public:
 
     ReceiverType get_receiver_type() const override { return ReceiverType::WORKER; };
 
-    const std::optional<Package>& get_processing_buffer() const {return buffer_;}
+    const std::optional<Package>& get_processing_buffer() const { return buffer_; }
 
     IPackageStockpile::const_iterator cbegin() const override { return q_->cbegin(); }
 
