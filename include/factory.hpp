@@ -15,7 +15,7 @@ public:
     using iterator = typename container_t::iterator;
     using const_iterator = typename container_t::const_iterator;
 
-    void add(Node&& node) { container.push_back(std::move(node)); }
+    void add(Node&& node) { container.emplace_back(std::move(node)); }
 
     void remove_by_id(ElementID id) { container.remove_if([id](const Node& elem) { return elem.get_id() == id; }); }
 
