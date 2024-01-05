@@ -21,11 +21,11 @@ void generate_structure_report(const Factory& f, std::ostream& os) {
                 storehouses.insert(iterator->first->get_id());
             }
         }
-        for (auto i: workers) {
-            os << "    worker #" << std::to_string(i) << "\n";
-        }
         for (auto i: storehouses) {
             os << "    storehouse #" << std::to_string(i) << "\n";
+        }
+        for (auto i: workers) {
+            os << "    worker #" << std::to_string(i) << "\n";
         }
         os << "\n";
     }
@@ -60,11 +60,11 @@ void generate_structure_report(const Factory& f, std::ostream& os) {
                 storehouses.insert(iterator->first->get_id());
             }
         }
-        for (auto i: workers) {
-            os << "    worker #" << std::to_string(i) << "\n";
-        }
         for (auto i: storehouses) {
             os << "    storehouse #" << std::to_string(i) << "\n";
+        }
+        for (auto i: workers) {
+            os << "    worker #" << std::to_string(i) << "\n";
         }
         os << "\n";
     }
